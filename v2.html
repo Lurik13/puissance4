@@ -1,177 +1,85 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Puissance 4</title>
-  <style>
-    body {
-      background-color: white;
-      margin: 0;
-      padding: 0;
-    }
-    #board {
-      width: 700px;
-      height: 600px;
-      margin: 50px auto 0 auto;
-      position: relative;
-    }
-    .circle {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      margin: 5px;
-      position: absolute;
-      cursor: pointer;
-    }
-    .red {
-      background-color: red;
-    }
-    .yellow {
-      background-color: yellow;
-    }
-    .winner {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 36px;
-      color: white;
-    }
-  </style>
+	<title>Puissance 4</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			background-color: #3f3f3f;
+		}
+
+		canvas {
+			margin: 10px;
+			border: 2px solid black;
+		}
+	</style>
 </head>
 <body>
-  <div id="board"></div>
+	<canvas id="board" width="350" height="300"></canvas>
+	<script>
+		// Constantes pour la taille du plateau de jeu
+		const ROWS = 6;
+		const COLS = 7;
+		const CELL_SIZE = 50;
 
-  <script>
-    var board = [];
-    var current_player = 1;
-    var circle_radius = 40;
-    var circle_padding = 10;
-    var board_rows = 6;
-    var board_columns = 7;
-    var game_over = false;
+		// Initialisation du plateau de jeu
+		let board = new Array(ROWS);
+		for (let row = 0; row < ROWS; row++) {
+			board[row] = new Array(COLS).fill(0);
+		}
 
-    // Créer les cercles pour le plateau de jeu
-    function create_circles() {
-      var board_div = document.getElementById("board");
-      for (var i = 0; i < board_rows; i++) {
-        board[i] = [];
-        for (var j = 0; j < board_columns; j++) {
-          var circle_div = document.createElement("div");
-          circle_div.className = "circle";
-          circle_div.style.top = i * (circle_radius * 2 + circle_padding) + circle_padding + "px";
-          circle_div.style.left = j * (circle_radius * 2 + circle_padding) + circle_padding + "px";
-          circle_div.setAttribute("data-row", i);
-          circle_div.setAttribute("data-col", j);
-          circle_div.onclick = function() {
-            if (!game_over) {
-              var row = this.getAttribute("data-row");
-              var col = this.getAttribute("data-col");
-              add_token(row, col);
-            }
-          }
-          board_div.appendChild(circle_div);
-          board[i][j] = 0;
-        }
-      }
-    }
+		// Obtention du contexte du canvas
+		let canvas = document.getElementById("board");
+		let ctx = canvas.getContext("2d");
 
-    // Ajouter un jeton sur le plateau de jeu
-    function add_token(row, col) {
-      for (var i = board_rows - 1; i >= 0; i--) {
-        if (board[i][col] === 0) {
-          board[i][col] = current_player;
-          var circle_div = document.querySelector('[data-row="' + i + '"][data-col="' + col + '"]');
-          circle_div.classList.add(current_player === 1 ? "red" : "yellow");
-          if (check_win(i, col)) {
-            var winner_div = document.createElement("div");
-            winner_div.className = "winner";
-            winner_div.innerHTML = "Le joueur " + current_player + " a gagné !";
-            document.body.appendChild(winner_div);
-            game_over = true;
-          } else {
-            current_player = current_player === 1 ? 2 : 1;
-          }
-          break;
-        }
-      }
-    }
+		// Dessin du plateau de jeu
+		ctx.fillStyle = "blue";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		ctx.strokeStyle = "black";
+		for (let row = 0; row < ROWS; row++) {
+			for (let col = 0; col < COLS; col++) {
+				ctx.strokeRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+			}
+		}
 
-    // Vérifier si un joueur a gagné
-    function check_win(row, col) {
-      var player = board[row][col];
-      // Vérifier les 4 jetons alignés
-      // Vérifier les 4 jetons alignés horizontalement
-      var count = 0;
-      for (var i = col - 3; i <= col + 3; i++) {
-        if (i < 0 || i >= board_columns) {
-          continue;
-        }
-        if (board[row][i] === player) {
-          count++;
-          if (count === 4) {
-            return true;
-          }
-        } else {
-          count = 0;
-        }
-      }
+		// Fonction pour dessiner un jeton
+		function drawCircle(x, y, color) {
+			ctx.beginPath();
+			ctx.arc(x, y, CELL_SIZE / 2 - 5, 0, Math.PI * 2);
+			ctx.fillStyle = color;
+			ctx.fill();
+			ctx.closePath();
+		}
 
-      // Vérifier les 4 jetons alignés verticalement
-      count = 0;
-      for (var i = row - 3; i <= row + 3; i++) {
-        if (i < 0 || i >= board_rows) {
-          continue;
-        }
-        if (board[i][col] === player) {
-          count++;
-          if (count === 4) {
-            return true;
-          }
-        } else {
-          count = 0;
-        }
-      }
+		// Fonction pour dessiner les jetons sur le plateau de jeu
+		function drawBoard() {
+			for (let row = 0; row < ROWS; row++) {
+				for (let col = 0; col < COLS; col++) {
+					if (board[row][col] === 1) {
+						drawCircle(col * CELL_SIZE + CELL_SIZE / 2, row * CELL_SIZE + CELL_SIZE / 2, "red");
+					} else if (board[row][col] === 2) {
+						drawCircle(col * CELL_SIZE + CELL_SIZE / 2, row * CELL_SIZE + CELL_SIZE / 2, "yellow");
+					}
+				}
+			}
+		}
 
-      // Vérifier les 4 jetons alignés en diagonale de gauche à droite
-      count = 0;
-      for (var i = -3; i <= 3; i++) {
-        var r = row + i;
-        var c = col + i;
-        if (r < 0 || r >= board_rows || c < 0 || c >= board_columns) {
-          continue;
-        }
-        if (board[r][c] === player) {
-          count++;
-          if (count === 4) {
-            return true;
-          }
-        } else {
-          count = 0;
-        }
-      }
-
-      // Vérifier les 4 jetons alignés en diagonale de droite à gauche
-      count = 0;
-      for (var i = -3; i <= 3; i++) {
-        var r = row + i;
-        var c = col - i;
-        if (r < 0 || r >= board_rows || c < 0 || c >= board_columns) {
-          continue;
-        }
-        if (board[r][c] === player) {
-          count++;
-          if (count === 4) {
-            return true;
-          }
-        } else {
-          count = 0;
-        }
-      }
-
-      return false;
-    }
-
-    create_circles();
-  </script>
+		// Fonction pour détecter les clics sur le plateau de jeu
+		canvas.addEventListener("click", function(event) {
+			let col = Math.floor(event.offsetX / CELL_SIZE);
+			for (let row = ROWS - 1; row >= 0; row--) {
+				if (board[row][col] === 0) {
+					board[row][col] = 1;
+					drawBoard();
+					break;
+				}
+			}
+		});
+	</script>
 </body>
 </html>
