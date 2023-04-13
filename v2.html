@@ -3,186 +3,81 @@
 <head>
 	<title>Puissance 4</title>
 	<style>
-		body {
-			margin: 0;
-			padding: 0;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100vh;
-			background-color: #3f3f3f;
-		}
-
-		canvas {
-			margin: 10px;
-			border: 2px solid black;
-		}
+		body{margin:0}
+		canvas{background:#333}
 	</style>
 </head>
-<body>
-	<canvas id="board" width="350" height="300"></canvas>
+<body onload="startGame()">
 	<script>
-		// Constantes pour la taille du plateau de jeu
-		const ROWS = 6;
-		const COLS = 7;
-		const CELL_SIZE = 50;
+		var canvas, ctx, player = 1, board = [], gameover = false;
+		const ROWS = 6, COLS = 7, CELL_SIZE = 80;
 
-		// Initialisation du plateau de jeu
-		let board = new Array(ROWS);
-		for (let row = 0; row < ROWS; row++) {
-			board[row] = new Array(COLS).fill(0);
+		function startGame(){
+			canvas = document.createElement('canvas');
+			canvas.width = COLS * CELL_SIZE;
+			canvas.height = (ROWS+1) * CELL_SIZE;
+			canvas.style.margin = 'auto';
+			canvas.style.display = 'block';
+			document.body.appendChild(canvas);
+			ctx = canvas.getContext('2d');
+			for(var r=0; r<ROWS; r++) board[r] = Array(COLS).fill(0);
+			canvas.addEventListener('mousemove', handleMousemove);
+			canvas.addEventListener('click', handleClick);
 		}
 
-		// Obtention du contexte du canvas
-		let canvas = document.getElementById("board");
-		let ctx = canvas.getContext("2d");
-
-		// Couleur des jetons
-		let player1Color = "red";
-		let player2Color = "yellow";
-
-		// Le joueur 1 commence
-		let currentPlayer = 1;
-
-		// Fonction pour dessiner le plateau de jeu
-		function drawBoard() {
-			ctx.fillStyle = "blue";
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
-			ctx.strokeStyle = "black";
-			for (let row = 0; row < ROWS; row++) {
-				for (let col = 0; col < COLS; col++) {
-					ctx.strokeRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-					if (board[row][col] === 1) {
-						drawCircle(col * CELL_SIZE + CELL_SIZE / 2, row * CELL_SIZE + CELL_SIZE / 2, player1Color);
-					} else if (board[row][col] === 2) {
-						drawCircle(col * CELL_SIZE + CELL_SIZE / 2, row * CELL_SIZE + CELL_SIZE / 2, player2Color);
-					}
+		function drawBoard(){
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			ctx.font = 'bold 60px sans-serif';
+			ctx.fillStyle = '#fff';
+			ctx.fillText('Puissance 4', 10, 60);
+			ctx.font = 'bold 30px sans-serif';
+			for(var r=0; r<ROWS; r++){
+				for(var c=0; c<COLS; c++){
+					ctx.beginPath();
+					ctx.arc(c*CELL_SIZE+CELL_SIZE/2, r*CELL_SIZE+CELL_SIZE*1.5, CELL_SIZE/2.5, 0, Math.PI*2);
+					ctx.closePath();
+					ctx.fillStyle = board[r][c] == 0 ? '#fff' : board[r][c] == 1 ? '#f00' : '#ff0';
+					ctx.fill();
 				}
 			}
-		}
-
-		// Fonction pour dessiner un jeton
-		function drawCircle(x, y, color) {
-			ctx.beginPath();
-			ctx.arc(x, y, CELL_SIZE / 2 - 5, 0, Math.PI * 2);
-			ctx.fillStyle = color;
-			ctx.fill();
-			ctx.closePath();
-		}
-
-		// Fonction pour détecter les clics sur le plateau de jeu
-		canvas.addEventListener("click", function(event) {
-			let col = Math.floor(event.offsetX / CELL_SIZE);
-			for (let row = ROWS - 1; row >= 0; row--) {
-				if (board[row][col] === 0) {
-					board[row][col] = currentPlayer;
-					drawBoard();
-					if (checkWin(currentPlayer, row, col)) {
-						if (currentPlayer === 1) {
-							alert("Red win !");
-						} else {
-							alert("Yellow win !");
-						}
-						resetGame();
-					} else {
-						switchPlayer();
-					}
-					break;
-				}
+			if(gameover){
+				ctx.fillStyle = 'rgba(0,0,0,0.8)';
+				ctx.fillRect(0,0,canvas.width,canvas.height);
+				ctx.fillStyle = '#fff';
+				ctx.font = 'bold 50px sans-serif';
+				ctx.fillText(`Joueur ${player == 1 ? 2 : 1} gagne!`, 10, canvas.height/2);
 			}
-		});
-
-		// Fonction pour changer de joueur
-		function switchPlayer()
-		function switchPlayer() {
-			currentPlayer = currentPlayer === 1 ? 2 : 1;
 		}
 
-		// Fonction pour réinitialiser le jeu
-		function resetGame() {
-			board = new Array(ROWS);
-			for (let row = 0; row < ROWS; row++) {
-				board[row] = new Array(COLS).fill(0);
-			}
-			currentPlayer = 1;
+		function handleMousemove(e){
+			var c = Math.floor(e.offsetX / CELL_SIZE);
+			ctx.clearRect(0,0,canvas.width,canvas.height);
 			drawBoard();
+			if(!gameover){
+				ctx.beginPath();
+				ctx.arc(c*CELL_SIZE+CELL_SIZE/2, CELL_SIZE/2, CELL_SIZE/2.5, 0, Math.PI*2);
+				ctx.closePath();
+				ctx.fillStyle = player == 1 ? '#f00' : '#ff0';
+				ctx.fill();
+			}
 		}
 
-		// Fonction pour vérifier si un joueur a gagné
-		function checkWin(player, row, col) {
-			// Vérification verticale
-			let count = 0;
-			for (let i = row - 3; i <= row + 3; i++) {
-				if (i < 0 || i >= ROWS) {
-					continue;
-				}
-				if (board[i][col] === player) {
-					count++;
-				} else {
-					count = 0;
-				}
-				if (count === 4) {
-					return true;
+		function handleClick(e){
+			if(gameover) return;
+			var c = Math.floor(e.offsetX / CELL_SIZE);
+			for(var r=ROWS-1; r>=0; r--){
+				if(board[r][c] == 0){
+					board[r][c] = player;
+					drawBoard();
+					checkForWin();
+					player = player == 1 ? 2 : 1;
+					return;
 				}
 			}
-
-			// Vérification horizontale
-			count = 0;
-			for (let j = col - 3; j <= col + 3; j++) {
-				if (j < 0 || j >= COLS) {
-					continue;
-				}
-				if (board[row][j] === player) {
-					count++;
-				} else {
-					count = 0;
-				}
-				if (count === 4) {
-					return true;
-				}
-			}
-
-			// Vérification diagonale 1 (haut gauche - bas droite)
-			count = 0;
-			for (let i = -3; i <= 3; i++) {
-				let r = row + i;
-				let c = col + i;
-				if (r < 0 || r >= ROWS || c < 0 || c >= COLS) {
-					continue;
-				}
-				if (board[r][c] === player) {
-					count++;
-				} else {
-					count = 0;
-				}
-				if (count === 4) {
-					return true;
-				}
-			}
-
-			// Vérification diagonale 2 (bas gauche - haut droite)
-			count = 0;
-			for (let i = -3; i <= 3; i++) {
-				let r = row - i;
-				let c = col + i;
-				if (r < 0 || r >= ROWS || c < 0 || c >= COLS) {
-					continue;
-				}
-				if (board[r][c] === player) {
-					count++;
-				} else {
-					count = 0;
-				}
-				if (count === 4) {
-					return true;
-				}
-			}
-
-			return false;
 		}
 
-		// Dessiner le plateau de jeu initial
-		drawBoard();
-	</script>
-</body>
-</html>
+		function checkForWin(){
+			var winner = 0;
+			// Vérification des colonnes
+			for(var c=0; c<COLS; c++){
+			
