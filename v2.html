@@ -37,13 +37,27 @@
 		let canvas = document.getElementById("board");
 		let ctx = canvas.getContext("2d");
 
-		// Dessin du plateau de jeu
-		ctx.fillStyle = "blue";
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
-		ctx.strokeStyle = "black";
-		for (let row = 0; row < ROWS; row++) {
-			for (let col = 0; col < COLS; col++) {
-				ctx.strokeRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+		// Couleur des jetons
+		let player1Color = "red";
+		let player2Color = "yellow";
+
+		// Le joueur 1 commence
+		let currentPlayer = 1;
+
+		// Fonction pour dessiner le plateau de jeu
+		function drawBoard() {
+			ctx.fillStyle = "blue";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			ctx.strokeStyle = "black";
+			for (let row = 0; row < ROWS; row++) {
+				for (let col = 0; col < COLS; col++) {
+					ctx.strokeRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+					if (board[row][col] === 1) {
+						drawCircle(col * CELL_SIZE + CELL_SIZE / 2, row * CELL_SIZE + CELL_SIZE / 2, player1Color);
+					} else if (board[row][col] === 2) {
+						drawCircle(col * CELL_SIZE + CELL_SIZE / 2, row * CELL_SIZE + CELL_SIZE / 2, player2Color);
+					}
+				}
 			}
 		}
 
@@ -56,30 +70,119 @@
 			ctx.closePath();
 		}
 
-		// Fonction pour dessiner les jetons sur le plateau de jeu
-		function drawBoard() {
-			for (let row = 0; row < ROWS; row++) {
-				for (let col = 0; col < COLS; col++) {
-					if (board[row][col] === 1) {
-						drawCircle(col * CELL_SIZE + CELL_SIZE / 2, row * CELL_SIZE + CELL_SIZE / 2, "red");
-					} else if (board[row][col] === 2) {
-						drawCircle(col * CELL_SIZE + CELL_SIZE / 2, row * CELL_SIZE + CELL_SIZE / 2, "yellow");
-					}
-				}
-			}
-		}
-
 		// Fonction pour détecter les clics sur le plateau de jeu
 		canvas.addEventListener("click", function(event) {
 			let col = Math.floor(event.offsetX / CELL_SIZE);
 			for (let row = ROWS - 1; row >= 0; row--) {
 				if (board[row][col] === 0) {
-					board[row][col] = 1;
+					board[row][col] = currentPlayer;
 					drawBoard();
+					if (checkWin(currentPlayer, row, col)) {
+						if (currentPlayer === 1) {
+							alert("Red win !");
+						} else {
+							alert("Yellow win !");
+						}
+						resetGame();
+					} else {
+						switchPlayer();
+					}
 					break;
 				}
 			}
 		});
+
+		// Fonction pour changer de joueur
+		function switchPlayer()
+		function switchPlayer() {
+			currentPlayer = currentPlayer === 1 ? 2 : 1;
+		}
+
+		// Fonction pour réinitialiser le jeu
+		function resetGame() {
+			board = new Array(ROWS);
+			for (let row = 0; row < ROWS; row++) {
+				board[row] = new Array(COLS).fill(0);
+			}
+			currentPlayer = 1;
+			drawBoard();
+		}
+
+		// Fonction pour vérifier si un joueur a gagné
+		function checkWin(player, row, col) {
+			// Vérification verticale
+			let count = 0;
+			for (let i = row - 3; i <= row + 3; i++) {
+				if (i < 0 || i >= ROWS) {
+					continue;
+				}
+				if (board[i][col] === player) {
+					count++;
+				} else {
+					count = 0;
+				}
+				if (count === 4) {
+					return true;
+				}
+			}
+
+			// Vérification horizontale
+			count = 0;
+			for (let j = col - 3; j <= col + 3; j++) {
+				if (j < 0 || j >= COLS) {
+					continue;
+				}
+				if (board[row][j] === player) {
+					count++;
+				} else {
+					count = 0;
+				}
+				if (count === 4) {
+					return true;
+				}
+			}
+
+			// Vérification diagonale 1 (haut gauche - bas droite)
+			count = 0;
+			for (let i = -3; i <= 3; i++) {
+				let r = row + i;
+				let c = col + i;
+				if (r < 0 || r >= ROWS || c < 0 || c >= COLS) {
+					continue;
+				}
+				if (board[r][c] === player) {
+					count++;
+				} else {
+					count = 0;
+				}
+				if (count === 4) {
+					return true;
+				}
+			}
+
+			// Vérification diagonale 2 (bas gauche - haut droite)
+			count = 0;
+			for (let i = -3; i <= 3; i++) {
+				let r = row - i;
+				let c = col + i;
+				if (r < 0 || r >= ROWS || c < 0 || c >= COLS) {
+					continue;
+				}
+				if (board[r][c] === player) {
+					count++;
+				} else {
+					count = 0;
+				}
+				if (count === 4) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		// Dessiner le plateau de jeu initial
+		drawBoard();
 	</script>
 </body>
 </html>
