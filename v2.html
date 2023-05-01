@@ -88,11 +88,11 @@
           board[i][col] = current_player;
           var circle_div = document.querySelector('[data-row="' + i + '"][data-col="' + col + '"]');
           circle_div.classList.add(current_player === 1 ? "red" : "yellow");
-          //
+          /*
           var border_div = document.querySelector("border");
           border_div.className = "border";
           border_div.classList.add(current_player ="red");
-          //
+          */
           if (check_win(i, col)) {
             var winner_div = document.createElement("div");
             winner_div.className = "winner";
