@@ -24,6 +24,7 @@
       margin: 30px;
       position: absolute;
       cursor: pointer;
+      background-color: #bbbbbb
     }
     .red {
       background-color: red;
@@ -33,11 +34,11 @@
     }
     .winner {
       position: absolute;
-      top: 50%;
+      top: 46%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 70px;
-      color: white;
+      font-size: 550%;
+      color: black;
     }
   </style>
 </head>
@@ -53,6 +54,7 @@
     var board_rows = 6;
     var board_columns = 7;
     var game_over = false;
+    var colour = ['rouge', 'jaune']
 
     // Créer les cercles pour le plateau de jeu
     function create_circles() {
@@ -86,10 +88,15 @@
           board[i][col] = current_player;
           var circle_div = document.querySelector('[data-row="' + i + '"][data-col="' + col + '"]');
           circle_div.classList.add(current_player === 1 ? "red" : "yellow");
+          //
+          var border_div = document.querySelector("border");
+          border_div.className = "border";
+          border_div.classList.add(current_player ="red");
+          //
           if (check_win(i, col)) {
             var winner_div = document.createElement("div");
             winner_div.className = "winner";
-            winner_div.innerHTML = "Le joueur " + current_player + " a gagné !";
+            winner_div.innerHTML = "Le " + colour[current_player-1] + " a gagné !";
             document.body.appendChild(winner_div);
             game_over = true;
           } else {
@@ -138,8 +145,8 @@
       // Vérifier les 4 jetons alignés en diagonale de gauche à droite
       count = 0;
       for (var i = -3; i <= 3; i++) {
-        var r = row + i;
-        var c = col + i;
+        var r = row - i;
+        var c = col - i;
         if (r < 0 || r >= board_rows || c < 0 || c >= board_columns) {
           continue;
         }
