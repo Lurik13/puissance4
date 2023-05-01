@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>🔴╭──╯ Puissance 4 ╰──╮ ☢️</title>
+  <title>🔴 Puissance 4 ☢️</title>
   <style>
     body {
       background-color: black;
@@ -84,15 +84,12 @@
     // Ajouter un jeton sur le plateau de jeu
     function add_token(row, col) {
       for (var i = board_rows - 1; i >= 0; i--) {
+        var border_div = document.createElement("div");
+        border_div.setAttribute("style",`font-style : italic; border:8px solid ${colour[current_player]}`);
         if (board[i][col] === 0) {
           board[i][col] = current_player;
           var circle_div = document.querySelector('[data-row="' + i + '"][data-col="' + col + '"]');
           circle_div.classList.add(current_player === 1 ? "red" : "yellow");
-          /*
-          var border_div = document.querySelector("border");
-          border_div.className = "border";
-          border_div.classList.add(current_player ="red");
-          */
           if (check_win(i, col)) {
             var winner_div = document.createElement("div");
             winner_div.className = "winner";
