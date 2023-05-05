@@ -37,8 +37,16 @@
       background-image: url("https://upload.wikimedia.org/wikipedia/commons/5/51/Flag_of_North_Korea.svg");
       background-size: cover;
     }
-    .green {
+    .joueur3 {
       background-color: #0b8300;
+    }
+    .score {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(40%, -50%);
+      font-size: 280%;
+      color: rgb(142, 12, 12);
     }
     .winner {
       position: absolute;
@@ -56,13 +64,11 @@
       font-size: 280%;
       color: white;
     }
-
     .icone {
       width:100px;
       height:100px;
       border-radius:100px;
     }
-    
     .player_item_container {
       display: flex;
       align-items: center;
@@ -74,6 +80,7 @@
     <div class="player_item_container">
       <h1>Joueur1</h1>
       <div class="joueur1 icone"></div>
+      <h1 id="score1">0</h1>
     </div>
     <div class="player_item_container">
       <h1>Joueur2</h1>
@@ -92,6 +99,7 @@
     var board_columns = 7;
     var game_over = false;
     var colour = ['joueur 1', 'joueur 2', 'joueur 3']
+    var score = [0, 0, 0]
 
     // Créer les cercles pour le plateau de jeu
     function create_circles() {
@@ -129,7 +137,10 @@
             var winner_div = document.createElement("div");
             winner_div.className = "winner";
             winner_div.innerHTML = "Le " + colour[current_player-1] + " a gagné !";
-            document.body.appendChild(winner_div);
+            document.body.appendChild(winner_div);            
+            score[current_player-1] += 1;
+            const score1 = document.getElementById("score1");
+            score1.textContent = +score1.textContent + 1;
             game_over = true;
           } else {
             current_player = current_player === 1 ? 2 : 1;
@@ -212,7 +223,6 @@
 
       return false;
     }
-
     create_circles();
   </script>
 </body>
