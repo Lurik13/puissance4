@@ -136,7 +136,9 @@
             document.body.appendChild(winner_div);            
             score[current_player-1] += 1;
             const score1 = document.getElementById("score1");
-            score1.textContent = +score1.textContent + 1;
+            score1.innerHTML = score[0];
+            const score2 = document.getElementById("score2");
+            score2.innerHTML = score[1];
             game_over = true;
           } else {
             current_player = current_player === 1 ? 2 : 1;
