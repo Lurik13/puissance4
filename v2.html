@@ -4,16 +4,18 @@
   <title>🔴 Puissance 4 ☢️</title>
   <style>
     body {
-      background-color: black;
+      background-color: rgb(35, 34, 34);
       margin: 0;
       padding: 0;
+      background-image: url("https://www.massivmoebel24.fr/images/product_images/popup_images/05-900-610-9000-1.jpg");
+      background-size: cover
     }
     #board {
       width: 700px;
       height: 600px;
       margin: 50px auto 0 auto;
       position: relative;
-      border: 8px solid yellow;
+      border: 8px solid white;
       background-color:#1f39ff;
       transform: translate(0%, 13%);
     }
@@ -26,11 +28,16 @@
       cursor: pointer;
       background-color: #bbbbbb
     }
-    .red {
-      background-color: red;
+    .joueur1 {
+      background-image: url("https://contents.mediadecathlon.com/p2445501/k$e364116a2304c63c4979bdca88c00cbd/sq/chaussures-bateau-homme.jpg");
+      background-size: cover
     }
-    .yellow {
-      background-color: yellow;
+    .joueur2 {
+      background-image: url("https://lookingforseed.com/wp-content/uploads/2020/08/piglin-head.png");
+      background-size: cover;
+    }
+    .green {
+      background-color: #0b8300;
     }
     .winner {
       position: absolute;
@@ -38,11 +45,40 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 550%;
-      color: black;
+      color: rgb(0, 0, 0);
+    }
+    .player_list {
+      position: absolute;
+      top: 50%;
+      right: -6.7%;
+      transform: translate(-50%, -50%);
+      font-size: 280%;
+      color: white;
+    }
+
+    .icone {
+      width:100px;
+      height:100px;
+      border-radius:100px;
+    }
+    
+    .player_item_container {
+      display: flex;
+      align-items: center;
     }
   </style>
 </head>
 <body>
+  <div class="player_list">
+    <div class="player_item_container">
+      <h1>Joueur 1</h1>
+      <div class="joueur1 icone"></div>
+    </div>
+    <div class="player_item_container">
+      <h1>Joueur 2</h1>
+      <div class="joueur2 icone"></div>
+    </div>
+  </div>
   <div id="board"></div>
 
   <script>
@@ -54,7 +90,7 @@
     var board_rows = 6;
     var board_columns = 7;
     var game_over = false;
-    var colour = ['rouge', 'jaune']
+    var colour = ['joueur 1', 'joueur 2', 'joueur 3']
 
     // Créer les cercles pour le plateau de jeu
     function create_circles() {
@@ -84,12 +120,10 @@
     // Ajouter un jeton sur le plateau de jeu
     function add_token(row, col) {
       for (var i = board_rows - 1; i >= 0; i--) {
-        var border_div = document.createElement("div");
-        border_div.setAttribute("style",`font-style : italic; border:8px solid ${colour[current_player]}`);
         if (board[i][col] === 0) {
           board[i][col] = current_player;
           var circle_div = document.querySelector('[data-row="' + i + '"][data-col="' + col + '"]');
-          circle_div.classList.add(current_player === 1 ? "red" : "yellow");
+          circle_div.classList.add(current_player === 1 ? "joueur1" : "joueur2");
           if (check_win(i, col)) {
             var winner_div = document.createElement("div");
             winner_div.className = "winner";
