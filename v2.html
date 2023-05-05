@@ -40,14 +40,6 @@
     .joueur3 {
       background-color: #0b8300;
     }
-    .score {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(40%, -50%);
-      font-size: 280%;
-      color: rgb(142, 12, 12);
-    }
     .winner {
       position: absolute;
       top: 50%;
@@ -60,9 +52,10 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(40%, -50%);
-      font-size: 280%;
+      transform: translate(30%, -50%);
+      font-size: 600%;
       color: white;
+      line-height: 0
     }
     .icone {
       width:100px;
@@ -78,13 +71,16 @@
 <body>
   <div class="player_list">
     <div class="player_item_container">
-      <h1>Joueur1</h1>
+      <pre id="score1">0</pre>
+      <pre>  </pre>
       <div class="joueur1 icone"></div>
-      <h1 id="score1">0</h1>
+      <pre>  Joueur 1</pre>
     </div>
     <div class="player_item_container">
-      <h1>Joueur2</h1>
+      <pre id="score2">0</pre>
+      <pre>  </pre>
       <div class="joueur2 icone"></div>
+      <pre>  Joueur 2</pre>
     </div>
   </div>
   <div id="board"></div>
