@@ -45,7 +45,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 550%;
+      font-size: 540%;
       color: rgb(0, 0, 0);
     }
     .player_list {
@@ -66,24 +66,32 @@
       display: flex;
       align-items: center;
     }
+    .player {
+      background-image: url("https://imgur.com/3VDFazZ.png");
+      background-size: cover;
+      width:100px;
+      height:100px;
+      border-radius:100px;
+    }
   </style>
 </head>
 <body>
   <div class="player_list">
     <div class="player_item_container">
-      <pre id="score1">0</pre>
-      <pre>  </pre>
+      <pre>Joueur 1  </pre>
       <div class="joueur1 icone"></div>
-      <pre>  Joueur 1</pre>
+      <pre>  </pre>
+      <pre id="score1">0</pre>
     </div>
     <div class="player_item_container">
-      <pre id="score2">0</pre>
-      <pre>  </pre>
+      <pre>Joueur 2  </pre>
       <div class="joueur2 icone"></div>
-      <pre>  Joueur 2</pre>
+      <pre>  </pre>
+      <pre id="score2">0</pre>
     </div>
   </div>
   <div id="board"></div>
+
 
   <script>
   
@@ -114,6 +122,12 @@
               var row = this.getAttribute("data-row");
               var col = this.getAttribute("data-col");
               add_token(row, col);
+            } else {
+              game_over = false;
+              setTimeout(() => winner_div.remove(), 3000);
+              board_div.innerHTML=""
+              create_circles();
+
             }
           }
           board_div.appendChild(circle_div);
@@ -130,22 +144,27 @@
           var circle_div = document.querySelector('[data-row="' + i + '"][data-col="' + col + '"]');
           circle_div.classList.add(current_player === 1 ? "joueur1" : "joueur2");
           if (check_win(i, col)) {
-            var winner_div = document.createElement("div");
-            winner_div.className = "winner";
-            winner_div.innerHTML = "Le " + colour[current_player-1] + " a gagné !";
-            document.body.appendChild(winner_div);            
+                       
             score[current_player-1] += 1;
             const score1 = document.getElementById("score1");
             score1.innerHTML = score[0];
             const score2 = document.getElementById("score2");
             score2.innerHTML = score[1];
             game_over = true;
+            victory();
           } else {
             current_player = current_player === 1 ? 2 : 1;
           }
           break;
         }
       }
+    }
+
+    function victory() {
+      var winner_div = document.createElement("div");
+      winner_div.className = "winner";
+      winner_div.innerHTML = "Le " + colour[current_player-1] + " a gagné !";
+      document.body.appendChild(winner_div);
     }
 
     // Vérifier si un joueur a gagné
