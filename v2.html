@@ -151,7 +151,6 @@
           var circle_div = document.querySelector('[data-row="' + i + '"][data-col="' + col + '"]');
           circle_div.classList.add(current_player === 1 ? "joueur1" : "joueur2");
           if (check_win(i, col)) {
-                       
             score[current_player-1] += 1;
             const score1 = document.getElementById("score1");
             score1.innerHTML = score[0];
@@ -159,6 +158,8 @@
             score2.innerHTML = score[1];
             game_over = true;
             victory();
+            if (current_player === 1) current_player = 2
+            else current_player = 1
           } else {
             current_player = current_player === 1 ? 2 : 1;
           }
