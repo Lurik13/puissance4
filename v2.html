@@ -30,11 +30,11 @@
       background-color: #bbbbbb
     }
     .joueur1 {
-      background: center / contain no-repeat url("https://pbs.twimg.com/profile_images/1637829634942197763/_5ev8vv5_400x400.jpg");
+      background: center / contain no-repeat url("https://static.wikia.nocookie.net/frstarwars/images/2/2d/Luke.jpg/revision/latest?cb=20150618122007");
       
     }
     .joueur2 {
-      background: center / contain no-repeat url("https://www.quick.fr/_next/static/images/quick-logo-e80a59ceb85498f922e3d6376471828b.png");
+      background: center / contain no-repeat url("https://fr.web.img4.acsta.net/r_654_368/newsv7/20/09/24/15/36/1415597.jpg");
     }
     .joueur3 {
       background-color: #0b8300;
@@ -110,6 +110,7 @@
     var game_over = false;
     var colour = ['joueur 1', 'joueur 2', 'joueur 3']
     var score = [0, 0, 0]
+    var perdant = 0
 
     // Créer les cercles pour le plateau de jeu
     function create_circles() {
@@ -134,7 +135,6 @@
               winner_div.remove();
               board_div.innerHTML=""
               create_circles();
-
             }
           }
           board_div.appendChild(circle_div);
