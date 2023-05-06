@@ -124,7 +124,8 @@
               add_token(row, col);
             } else {
               game_over = false;
-              setTimeout(() => winner_div.remove(), 3000);
+              winner_div = document.getElementById("victoryText")
+              winner_div.remove();
               board_div.innerHTML=""
               create_circles();
 
@@ -162,6 +163,7 @@
 
     function victory() {
       var winner_div = document.createElement("div");
+      winner_div.setAttribute("id", "victoryText")
       winner_div.className = "winner";
       winner_div.innerHTML = "Le " + colour[current_player-1] + " a gagné !";
       document.body.appendChild(winner_div);
