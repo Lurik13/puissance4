@@ -50,14 +50,23 @@
       font-size: 540%;
       color: rgb(0, 0, 0);
     }
-    .player_list {
+    .player1 {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(30%, -50%);
+      transform: translate(20%, -85%);
       font-size: 550%;
+      font-family: 'Courier New', monospace;
+      color: #9b0000;
+    }
+    .player2{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(20%, -10%);
+      font-size: 550%;
+      font-family: 'Courier New', monospace;
       color: white;
-      line-height: 0
     }
     .icone {
       width:100px;
@@ -68,27 +77,34 @@
       display: flex;
       align-items: center;
     }
-    .turn {
-      background-image: url("https://imgur.com/3VDFazZ.png");
-      background-size: cover;
-      width:100px;
-      height:100px;
-      border-radius:100px;
+    .your_turn {
+      background: center / contain no-repeat url("https://imgur.com/3VDFazZ.png");
+      width:50px;
+      height:50px;
+    }
+    .not_your_turn {
+      background: center / contain no-repeat url("https://imgur.com/1Xzubd6.png");
+      width:50px;
+      height:50px;
     }
   </style>
 </head>
 <body>
-  <div class="player_list">
+  <div class="player1">
     <div class="player_item_container">
-      <pre id="j1">Joueur 1  </pre>
+      <div class="your_turn" id="your_turn"></div>
+      <pre id="j1">  Joueur 1  </pre>
       <div class="joueur1 icone"></div>
       <pre>  </pre>
       <div class="score">
         <pre id="score1">0</pre>
       </div>
     </div>
+  </div>
+  <div class="player2">
     <div class="player_item_container">
-      <pre id="j2">Joueur 2  </pre>
+      <div class="not_your_turn" id="not_your_turn"></div>
+      <pre id="j2">  Joueur 2  </pre>
       <div class="joueur2 icone"></div>
       <pre>  </pre>
       <div class="score">
@@ -96,6 +112,7 @@
       </div>
     </div>
   </div>
+
   <div id="board"></div>
 
 
@@ -126,18 +143,11 @@
           circle_div.style.left = j * (circle_radius * 2 + circle_padding) + circle_padding + "px";
           circle_div.setAttribute("data-row", i);
           circle_div.setAttribute("data-col", j);
-          change_colour('j1', '#9b0000');
           circle_div.onclick = function() {
             if (!game_over) {
               var row = this.getAttribute("data-row");
               var col = this.getAttribute("data-col");
-              if (current_player === 1) {
-                change_colour('j1', '#ffffff');
-                change_colour('j2', '#9b0000');
-              } else {
-                change_colour('j1', '#9b0000');
-                change_colour('j2', '#ffffff');
-              }
+              turn();
               add_token(row, col);
             } else {
               game_over = false;
@@ -190,6 +200,22 @@
     // Change la couleur de l'utilisateur qui doit jouer
     function change_colour(id, colour) {
       document.getElementById(id).style.color = colour;
+    }
+
+    function turn() {
+      const yourTurn = document.getElementById("your_turn");
+      const notYourTurn = document.getElementById("not_your_turn");
+      if (current_player === 1) {
+        change_colour('j1', '#ffffff');
+        change_colour('j2', '#9b0000');
+        yourTurn.style.backgroundImage = "url('https://imgur.com/1Xzubd6.png')";
+        notYourTurn.style.backgroundImage = "url('https://imgur.com/3VDFazZ.png')";
+      } else {
+        change_colour('j1', '#9b0000');
+        change_colour('j2', '#ffffff');
+        yourTurn.style.backgroundImage = "url('https://imgur.com/3VDFazZ.png')";
+        notYourTurn.style.backgroundImage = "url('https://imgur.com/1Xzubd6.png')";
+      }
     }
 
     // Vérifier si un joueur a gagné
