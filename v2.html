@@ -30,15 +30,17 @@
       background-color: #bbbbbb
     }
     .joueur1 {
-      background-image: url("https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg");
-      background-size: cover
+      background: center / contain no-repeat url("https://pbs.twimg.com/profile_images/1637829634942197763/_5ev8vv5_400x400.jpg");
+      
     }
     .joueur2 {
-      background-image: url("https://upload.wikimedia.org/wikipedia/commons/5/51/Flag_of_North_Korea.svg");
-      background-size: cover;
+      background: center / contain no-repeat url("https://www.quick.fr/_next/static/images/quick-logo-e80a59ceb85498f922e3d6376471828b.png");
     }
     .joueur3 {
       background-color: #0b8300;
+    }
+    .score {
+      color: rgb(115, 25, 151)
     }
     .winner {
       position: absolute;
@@ -81,13 +83,17 @@
       <pre>Joueur 1  </pre>
       <div class="joueur1 icone"></div>
       <pre>  </pre>
-      <pre id="score1">0</pre>
+      <div class="score">
+        <pre id="score1">0</pre>
+      </div>
     </div>
     <div class="player_item_container">
       <pre>Joueur 2  </pre>
       <div class="joueur2 icone"></div>
       <pre>  </pre>
-      <pre id="score2">0</pre>
+      <div class="score">
+        <pre id="score2">0</pre>
+      </div>
     </div>
   </div>
   <div id="board"></div>
