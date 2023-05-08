@@ -56,8 +56,8 @@
       left: 50%;
       transform: translate(7%, -85%);
       font-size: 550%;
-      font-family: 'Courier New', monospace;
-      color: #9b0000;
+      font-family: 'Calibri', bold;
+      color: #dddddd;
     }
     .player2{
       position: absolute;
@@ -65,8 +65,8 @@
       left: 50%;
       transform: translate(7%, -10%);
       font-size: 550%;
-      font-family: 'Courier New', monospace;
-      color: white;
+      font-family: 'Calibri', bold;
+      color: #999999;
     }
     .icone {
       width:100px;
@@ -78,10 +78,11 @@
       align-items: center;
     }
     .your_turn {
-      background: center / contain no-repeat url("https://imgur.com/3VDFazZ.png");
+      background: center / contain no-repeat url("https://imgur.com/eXLgG1o.png"); /* Version rouge : https://imgur.com/3VDFazZ.png */
       width:50px;
       height:50px;
     }
+    
     .not_your_turn {
       background: center / contain no-repeat url("https://imgur.com/1Xzubd6.png");
       width:50px;
@@ -93,7 +94,9 @@
   <div class="player1">
     <div class="player_item_container">
       <div class="your_turn" id="your_turn"></div>
-      <pre id="j1">  Joueur 1  </pre>
+      <pre> </pre>
+      <p id="j1">Joueur 1</p>
+      <pre>  </pre>
       <div class="joueur1 icone"></div>
       <pre>  </pre>
       <div class="score">
@@ -104,7 +107,9 @@
   <div class="player2">
     <div class="player_item_container">
       <div class="not_your_turn" id="not_your_turn"></div>
-      <pre id="j2">  Joueur 2  </pre>
+      <pre> </pre>
+      <p id="j2">  Joueur 2</p>
+      <pre>  </pre>
       <div class="joueur2 icone"></div>
       <pre>  </pre>
       <div class="score">
@@ -206,14 +211,14 @@
       const yourTurn = document.getElementById("your_turn");
       const notYourTurn = document.getElementById("not_your_turn");
       if (current_player === 1) {
-        change_colour('j1', '#ffffff');
-        change_colour('j2', '#9b0000');
+        change_colour('j1', '#999999');
+        change_colour('j2', '#dddddd');
         yourTurn.style.backgroundImage = "url('https://imgur.com/1Xzubd6.png')";
-        notYourTurn.style.backgroundImage = "url('https://imgur.com/3VDFazZ.png')";
+        notYourTurn.style.backgroundImage = "url('https://imgur.com/eXLgG1o.png')";
       } else {
-        change_colour('j1', '#9b0000');
-        change_colour('j2', '#ffffff');
-        yourTurn.style.backgroundImage = "url('https://imgur.com/3VDFazZ.png')";
+        change_colour('j1', '#dddddd');
+        change_colour('j2', '#999999');
+        yourTurn.style.backgroundImage = "url('https://imgur.com/eXLgG1o.png')";
         notYourTurn.style.backgroundImage = "url('https://imgur.com/1Xzubd6.png')";
       }
     }
