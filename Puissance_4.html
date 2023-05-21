@@ -5,19 +5,15 @@
   <title>🔴 Puissance 4 ☢️</title>
   <style>
     body {
-      background-color: rgb(35, 34, 34);
       margin: 0;
       padding: 0;
       background-image: url("https://www.massivmoebel24.fr/images/product_images/popup_images/05-900-610-9000-1.jpg");
-      background-size: cover
+      background-size: cover;
     }
     #board {
+      position: relative;
       width: 700px;
       height: 600px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-100%, -50%);
       border: 0.5rem solid white;
       background-color:#1f39ff;
     }
@@ -28,43 +24,49 @@
       margin: 30px;
       position: absolute;
       cursor: pointer;
-      background-color: #bbbbbb
+      background: center / cover no-repeat #bbbbbb;
     }
-    .joueur1 {
-      background: center / cover no-repeat url("https://media.tenor.com/QXVs4QWLlzkAAAAC/spider-man.gif");
-      
+
+    .icone {
+      width: 100px;
+      height: 100px;
+      border-radius: 50px;
+
+      background: center / cover no-repeat black;
+      border: none;
+      outline: none;
     }
-    .joueur2 {
-      background: center / cover no-repeat url("https://media.tenor.com/V_Gttbz3SfYAAAAC/spider-insects.gif");
-    }
+
     .score {
       color: rgb(115, 25, 151)
     }
-    .player1 {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(7%, -85%);
-      font-size: 550%;
-      color: #dddddd;
+
+    #game_container {
+      display: flex;
+      flex-direction: row;
+      text-align: right;
+      justify-content: center;
+      align-items: center;
+      gap: 42px;
+
+      min-height: 100vh;
+      height: 100%;
     }
-    .player2{
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(7%, -10%);
+
+    #game_container .sidebar {
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+
       font-size: 550%;
       color: #999999;
     }
+
     .font {
       font-family: 'Calibri', bold;
     }
-    .icone {
-      width:100px;
-      height:100px;
-      border-radius:100px;
-    }
-    .player_item_container {
+
+    #game_container .player_item_container {
       display: flex;
       align-items: center;
       gap: 50px; /** L'espace entre chaque item du container. */
@@ -94,89 +96,180 @@
       border-radius: 15px;
       box-shadow: 0 9px #999; 
     }
-    /*
-    .button span {
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      transition: 0.5s;
-    }
-    .button span:after {
-      content: '\00bb';
-      position: absolute;
-      opacity: 0;
-      top: 0;
-      right: -20px;
-      transition: 0.5s;
-    }
-    .button:hover span {
-      padding-right: 25px;
-    }
-
-    .button:hover span:after {
-      opacity: 1;
-      right: 0;
-    }
-    .button:hover {background-color: rgb(108, 0, 0)}
-
-    .button:active {
-      background-color:rgb(255, 0, 0);
-      box-shadow: 0 5px #666;
-      transform: translateY(4px);
-    }*/
     .gameover_overlay {
       position: fixed;
       inset: 0;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding-right: 12%;
+      padding-top: 1%;
 
       background-color: rgba(0, 0, 0, 0.5);
-      font-size: 540%;
+      font-family: 'Calibri', bold;
+      font-size: 400%;
       cursor: pointer;
     }
-
     .gameover_overlay p {
       background-color: #fff;
       color: #000;
       padding: 24px;
       border-radius: 12px;
     }
+
+    .hidden {
+      display: none !important;
+    }
+
+    #select_avatar_container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.2px;
+    }
+
+    #select_avatar_container .header_text {
+      font-size: 500%;
+      font-family: 'Arial Black';
+      color: #fffece;
+      -webkit-text-stroke: 3px #592c02;
+      text-shadow: #592c02 8px 8px;
+      text-align: center;
+    }
+    
+    #select_avatar_container .player_item_container {
+      font-family: 'Calibri', bold;
+      color: #dddddd;
+      display: flex;
+      align-items: center;
+      clip-path: inset(0 0 0 0);
+      font-size: 650%;
+      gap: 50px;
+      height:200px;
+    }
+
+    .validation_button {
+        background: #2d7d46;
+        padding: 20px 24px;
+        color: white;
+        width: 295px;
+        height: 123px;
+        font-size: xx-large;
+        border-radius: 12px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+    .validation_button:hover,
+    .validation_button:focus {
+      background: #3ea860;
+    }
   </style>
 </head>
 <body>
-  <!-- <div class="container">
-    <button class="button" style="vertical-align:middle"><span>Rejouer</span></button>
-  </div> -->
-  <div class="player1 font">
+  <section id="select_avatar_container">
+    <h1 class="header_text">Choix de l'avatar</h1>
     <div class="player_item_container">
-      <div class="your_turn" id="your_turn"></div>
-      <p id="j1">Joueur 1</p>
-      <div class="joueur1 icone"></div>
-      <div class="score">
-        <p id="score1">0</pre>
-      </div>
+        <p>Joueur 1</p>
+        <button type="button" id="joueur1_icone_selector" class="joueur1_icone icone"></button>
     </div>
-  </div>
-  <div class="player2 font">
     <div class="player_item_container">
-      <div class="not_your_turn" id="not_your_turn"></div>
-      <p id="j2">Joueur 2</p>
-      <div class="joueur2 icone"></div>
-      <div class="score">
-        <p id="score2">0</p>
-      </div>
+        <p>Joueur 2</p>
+        <button type="button" id="joueur2_icone_selector" class="joueur2_icone icone"></button>
     </div>
-  </div>
+    
+    <button type="button" class="validation_button" id="select_avatar_confirm_button">Valider</button>
+  </section>
 
-  <div id="board"></div>
+  <section id="game_container" class="hidden">
+    <div id="board"></div>
+
+    <div class="sidebar font">
+      <div class="player_item_container">
+        <div class="your_turn" id="your_turn"></div>
+        <p id="j1">Joueur 1</p>
+        <div class="joueur1_icone icone"></div>
+        <div class="score">
+          <p id="score1">0</pre>
+        </div>
+      </div>
+      <div class="player_item_container">
+        <div class="not_your_turn" id="not_your_turn"></div>
+        <p id="j2">Joueur 2</p>
+        <div class="joueur2_icone icone"></div>
+        <div class="score">
+          <p id="score2">0</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
 
   <script>
-  
+    let imageJoueur1 = "https://imgur.com/1Xzubd6.png";
+    let iconeJoueur1 = "";
+    let imageJoueur2 = "https://imgur.com/eXLgG1o.png";
+    let iconeJoueur2 = "";
+
+    document.getElementById("select_avatar_confirm_button").onclick = () => {
+      if (!iconeJoueur1 || !iconeJoueur2) return;
+      if (iconeJoueur1 === iconeJoueur2) return;
+
+      document.getElementById("select_avatar_container").classList.add("hidden");
+      document.getElementById("game_container").classList.remove("hidden");
+    }
+
+    ["joueur1_icone_selector", "joueur2_icone_selector"].forEach(id => {
+      const imageInputButton = document.getElementById(id);
+      imageInputButton.style.cursor = "pointer";
+
+      const cssVarName = id.startsWith("joueur1") ? "--player1-icon" : "--player2-icon";
+
+      imageInputButton.onclick = () => {
+        const inputFileElement = document.createElement("input");
+        inputFileElement.setAttribute("type", "file");
+        inputFileElement.setAttribute("hidden", "true");
+        
+        inputFileElement.onchange = (event) => {
+          if (!inputFileElement.files) return;
+
+          let reader = new FileReader();
+          const file = inputFileElement.files[0];
+
+          reader.onload = (e) => {
+            const elements = document.querySelectorAll(id.startsWith("joueur1") ? ".joueur1_icone" : ".joueur2_icone");
+            elements.forEach(element => {
+              element.style.backgroundImage = "url(" + reader.result + ")";
+            });
+
+            id.startsWith("joueur1") ? (
+              iconeJoueur1 = reader.result
+            ) : (
+              iconeJoueur2 = reader.result
+            );
+
+            inputFileElement.remove();
+          };
+
+          reader.readAsDataURL(file);
+        }
+        
+        document.body.appendChild(inputFileElement);
+        inputFileElement.click();
+      }
+    })
+
+    /////////////////////////////////////////
+    //            Game logic.
+    /////////////////////////////////////////
+
     /** La grille, `0` pour non remplie et tout autre nombre différent de 0 pour jeton rempli. */
     const board = [];
 
-    /** Le joueur qui est actuellement entrain de jouer. */
+    /** Le joueur qui est actuellement en train de jouer. */
     let current_player = 1;
 
     // Styles du cercle.
@@ -199,9 +292,6 @@
 
     const yourTurn = document.getElementById("your_turn");
     const notYourTurn = document.getElementById("not_your_turn");
-
-    const imageJoueur1 = "https://imgur.com/1Xzubd6.png";
-    const imageJoueur2 = "https://imgur.com/eXLgG1o.png";
 
     document.body.addEventListener("click", () => {
       if (!game_over) return;
@@ -229,7 +319,7 @@
       // Puis les couleurs du label des joueurs.
       j1_label.style.color = player === 2 ? '#999999' : '#dddddd';
       j2_label.style.color = player === 1 ? '#999999' : '#dddddd';
-      // On change le joueur actuellement entrain de jouer.
+      // On change le joueur actuellement en train de jouer.
       current_player = player;
     }
 
@@ -280,7 +370,8 @@
         board[checkRowIndex][columnIndex] = current_player;
 
         const circle_element = document.querySelector('[data-row="' + checkRowIndex + '"][data-col="' + columnIndex + '"]');
-        circle_element.classList.add(current_player === 1 ? "joueur1" : "joueur2");
+        circle_element.classList.add(current_player === 1 ? "joueur1_icone" : "joueur2_icone");
+        circle_element.style.backgroundImage = `url('${current_player === 1 ? iconeJoueur1 : iconeJoueur2}')`;
         
         // On vérifie la grille sur cette ligne.
         const isWin = check_win(checkRowIndex, columnIndex);
